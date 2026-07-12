@@ -37,6 +37,8 @@ The build produces:
 - `dist/provenance.json`
 - a generated `Package.swift` containing the release URL and checksum
 
+The local XCFramework retains dSYMs. The SwiftPM runtime archive excludes them to keep dependency downloads small.
+
 ## Updating
 
 Updates are deliberate. Change the pinned commits in `VERSION.env`, review upstream changes, rebuild from an empty output directory, run verification, and publish a new immutable GitHub release. Never replace an existing release asset or move an existing tag.

@@ -12,7 +12,7 @@ let package = Package(
         .binaryTarget(
             name: "WebRTC",
             url: "https://github.com/zizicici/WatermelonWebRTC/releases/download/144.7559.1/WebRTC-144.7559.1.xcframework.zip",
-            checksum: "e87460923a392ff295a51c5b90b5111c5c277c398112239723c9709be0401b2a"
+            checksum: "b180926d9024b639fe2ff316893403fdf8a4538e9ee537243c706d46067ae2fc"
         ),
     ]
 )

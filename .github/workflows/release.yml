@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "[0-9]*"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify release inputs
+        run: |
+          source VERSION.env
+          test "$GITHUB_REF_NAME" = "$PACKAGE_VERSION"
+          test -f "release-assets/WebRTC-$PACKAGE_VERSION.xcframework.zip"
+          test -f release-assets/provenance.json
+      - name: Publish immutable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          source VERSION.env
+          gh release create "$GITHUB_REF_NAME" \
+            "release-assets/WebRTC-$PACKAGE_VERSION.xcframework.zip" \
+            release-assets/provenance.json \
+            --title "$PACKAGE_VERSION" \
+            --generate-notes \
+            --verify-tag

@@ -1,0 +1,10 @@
+{
+  "packageVersion": "144.7559.1",
+  "webrtcMilestone": 144,
+  "webrtcBranch": "7559",
+  "webrtcCommit": "2e1433bcaaa9582126e2af48a3c5d712331931c4",
+  "depotToolsCommit": "953e42245133578f3af7abebe9f929f2cfc549cf",
+  "iosDeploymentTarget": "14.0",
+  "archive": "WebRTC-144.7559.1.xcframework.zip",
+  "swiftPackageChecksum": "b180926d9024b639fe2ff316893403fdf8a4538e9ee537243c706d46067ae2fc"
+}
