@@ -5,7 +5,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT_DIR/VERSION.env"
 
-BUILD_ROOT="$ROOT_DIR/.build"
+BUILD_ROOT="${WATERMELON_WEBRTC_BUILD_ROOT:-$HOME/Library/Caches/WatermelonWebRTC}"
 DEPOT_TOOLS_DIR="$BUILD_ROOT/depot_tools"
 CHECKOUT_ROOT="$BUILD_ROOT/checkout"
 WEBRTC_SRC_DIR="$CHECKOUT_ROOT/src"

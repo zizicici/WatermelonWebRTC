@@ -21,6 +21,8 @@ Requirements:
 - At least 30 GB free disk space
 - Git and network access to Google's source hosts
 
+Source and tool checkouts are stored outside the repository in `~/Library/Caches/WatermelonWebRTC` by default. Override this with `WATERMELON_WEBRTC_BUILD_ROOT`.
+
 ```sh
 ./scripts/sync.sh
 ./scripts/build.sh
