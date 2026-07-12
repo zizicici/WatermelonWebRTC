@@ -19,7 +19,7 @@ if [[ ! -d "$WEBRTC_SRC_DIR/.git" ]]; then
     mkdir -p "$CHECKOUT_ROOT"
     (
         cd "$CHECKOUT_ROOT"
-        fetch --nohooks webrtc_ios
+        fetch --nohooks --no-caffeinate webrtc_ios
     )
 fi
 
