@@ -18,7 +18,7 @@ This repository does not fork WebRTC, patch its symbols, or redistribute a third
 Requirements:
 
 - macOS with Xcode and Command Line Tools
-- At least 30 GB free disk space
+- At least 60 GB free disk space
 - Git and network access to Google's source hosts
 
 Source and tool checkouts are stored outside the repository in `~/Library/Caches/WatermelonWebRTC` by default. Override this with `WATERMELON_WEBRTC_BUILD_ROOT`.
@@ -44,4 +44,3 @@ Updates are deliberate. Change the pinned commits in `VERSION.env`, review upstr
 ## License
 
 The scripts and package metadata in this repository use the BSD 3-Clause license. Google WebRTC retains its own license and patent grant; the official build embeds the generated third-party license bundle in the XCFramework.
-
