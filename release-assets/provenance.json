@@ -1,10 +1,12 @@
 {
-  "packageVersion": "144.7559.1",
+  "packageVersion": "144.7559.2-watermelon.1",
   "webrtcMilestone": 144,
   "webrtcBranch": "7559",
   "webrtcCommit": "2e1433bcaaa9582126e2af48a3c5d712331931c4",
   "depotToolsCommit": "953e42245133578f3af7abebe9f929f2cfc549cf",
+  "buildProfile": "watermelon-data-channel-only-minsize-v1",
+  "patchSetSha256": "300c65fd18cc5a5502ce0aad1a03667662c53aa051574d27b5ac6dfb38fdc0d6",
   "iosDeploymentTarget": "14.0",
-  "archive": "WebRTC-144.7559.1.xcframework.zip",
-  "swiftPackageChecksum": "b180926d9024b639fe2ff316893403fdf8a4538e9ee537243c706d46067ae2fc"
+  "archive": "WebRTC-144.7559.2-watermelon.1.xcframework.zip",
+  "swiftPackageChecksum": "ed55a50ce98c2f59f726a6d1e54bea075e7ecdabee8b7bc93910969ec603fa14"
 }
