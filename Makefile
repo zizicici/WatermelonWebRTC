@@ -1,7 +1,10 @@
-.PHONY: sync build verify package clean
+.PHONY: sync patches build verify package clean
 
 sync:
 	./scripts/sync.sh
+
+patches:
+	./scripts/patches.sh --apply
 
 build:
 	./scripts/build.sh
@@ -14,4 +17,3 @@ package:
 
 clean:
 	./scripts/clean.sh
-

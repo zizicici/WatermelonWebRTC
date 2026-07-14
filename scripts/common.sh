@@ -17,6 +17,10 @@ RELEASE_ASSETS_DIR="$ROOT_DIR/release-assets"
 ARCHIVE_NAME="WebRTC-$PACKAGE_VERSION.xcframework.zip"
 ARCHIVE_PATH="$DIST_DIR/$ARCHIVE_NAME"
 RELEASE_URL="https://github.com/zizicici/WatermelonWebRTC/releases/download/$PACKAGE_VERSION/$ARCHIVE_NAME"
+PATCHES_DIR="$ROOT_DIR/patches"
+WEBRTC_PATCH="$PATCHES_DIR/webrtc-data-channel-only.patch"
+CHROMIUM_BUILD_PATCH="$PATCHES_DIR/chromium-ios-minsize.patch"
+BUILD_PROFILE="watermelon-data-channel-only-minsize-v1"
 
 export PATH="$DEPOT_TOOLS_DIR:$PATH"
 export DEPOT_TOOLS_UPDATE=0
@@ -40,4 +44,13 @@ require_directory() {
         echo "Missing required directory: $1" >&2
         exit 1
     }
+}
+
+patch_set_sha256() {
+    (
+        cd "$ROOT_DIR"
+        shasum -a 256 \
+            patches/chromium-ios-minsize.patch \
+            patches/webrtc-data-channel-only.patch
+    ) | shasum -a 256 | awk '{print $1}'
 }

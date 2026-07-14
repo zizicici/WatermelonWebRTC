@@ -1,0 +1,62 @@
+diff --git a/config/compiler/BUILD.gn b/config/compiler/BUILD.gn
+index c09c9677b..d1311b360 100644
+--- a/config/compiler/BUILD.gn
++++ b/config/compiler/BUILD.gn
+@@ -2802,7 +2802,7 @@ config("optimize") {
+     # -Os in clang is more of a size-conscious -O2 than "size at any cost"
+     # (AKA -Oz).
+ 
+-    if (is_fuchsia || enable_cast_receiver) {
++    if (is_fuchsia || enable_cast_receiver || optimize_for_minimum_size) {
+       cflags = [ "-Oz" ] + common_optimize_on_cflags
+     } else {
+       cflags = [ "-Os" ] + common_optimize_on_cflags
+diff --git a/config/compiler/compiler.gni b/config/compiler/compiler.gni
+index 5cc0220f0..4bf13f1e8 100644
+--- a/config/compiler/compiler.gni
++++ b/config/compiler/compiler.gni
+@@ -36,6 +36,9 @@ declare_args() {
+   # Default to favoring speed over size for platforms not listed below.
+   optimize_for_size =
+       !is_high_end_android && (is_android || is_castos || is_fuchsia)
++
++  # If true, prefer minimum code size even where -Os is the platform default.
++  optimize_for_minimum_size = false
+ }
+ 
+ # Allow other projects to keep use_cxx23 false by default if they aren't ready.
+diff --git a/config/ios/BUILD.gn b/config/ios/BUILD.gn
+index 503c8a10e..98c452cf3 100644
+--- a/config/ios/BUILD.gn
++++ b/config/ios/BUILD.gn
+@@ -183,10 +183,13 @@ config("ios_extension_executable_flags") {
+ }
+ 
+ config("ios_dynamic_flags") {
+-  ldflags = [
+-    # Always load Objective-C categories and class.
+-    "-Wl,-ObjC",
+-  ]
++  ldflags = []
++  if (!ios_disable_objc_archive_autoload) {
++    ldflags += [
++      # Always load Objective-C categories and class.
++      "-Wl,-ObjC",
++    ]
++  }
+ 
+   # The path to the Swift compatibility libraries (required to run code built
+   # with version N of the SDK on older version of the OS) is relative to the
+diff --git a/config/ios/config.gni b/config/ios/config.gni
+index 7d0d56369..85b4197dc 100644
+--- a/config/ios/config.gni
++++ b/config/ios/config.gni
+@@ -5,6 +5,8 @@
+ import("//build/config/apple/mobile_config.gni")
+ 
+ declare_args() {
++  ios_disable_objc_archive_autoload = false
++
+   # Generate orderfile at application startup and then exit.
+   # NOTE: This flag adds runtime tooling to capture function call details,
+   # writes out an orderfile to the documents directory, then terminates the

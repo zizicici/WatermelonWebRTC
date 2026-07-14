@@ -7,6 +7,7 @@ source "$(dirname "$0")/common.sh"
 require_command swift
 require_command ditto
 require_command plutil
+require_command shasum
 require_command zip
 
 rm -rf "$DIST_DIR" "$RELEASE_ASSETS_DIR"
@@ -25,6 +26,7 @@ find "$runtime_xcframework" -exec touch -h -t 202001010000 {} +
 rm -rf "$DIST_DIR/runtime"
 
 checksum="$(swift package compute-checksum "$ARCHIVE_PATH")"
+patch_sha256="$(patch_set_sha256)"
 sed \
     -e "s|__BINARY_URL__|$RELEASE_URL|g" \
     -e "s|__BINARY_CHECKSUM__|$checksum|g" \
@@ -37,6 +39,8 @@ cat > "$DIST_DIR/provenance.json" <<EOF
   "webrtcBranch": "$WEBRTC_BRANCH",
   "webrtcCommit": "$WEBRTC_COMMIT",
   "depotToolsCommit": "$DEPOT_TOOLS_COMMIT",
+  "buildProfile": "$BUILD_PROFILE",
+  "patchSetSha256": "$patch_sha256",
   "iosDeploymentTarget": "$IOS_DEPLOYMENT_TARGET",
   "archive": "$ARCHIVE_NAME",
   "swiftPackageChecksum": "$checksum"

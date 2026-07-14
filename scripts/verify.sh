@@ -23,12 +23,25 @@ simulator_archs="$(lipo -archs "$simulator_binary")"
 grep -qw arm64 <<<"$simulator_archs"
 grep -qw x86_64 <<<"$simulator_archs"
 
-nm -gU "$device_binary" | grep -q '_OBJC_CLASS_\$_RTCPeerConnection'
-nm -gU "$device_binary" | grep -q '_OBJC_CLASS_\$_RTCDataChannel'
-if nm -gU "$device_binary" | grep -q '_OBJC_CLASS_\$_LKRTC'; then
+device_symbols="$(nm -gU "$device_binary")"
+grep -q '_OBJC_CLASS_\$_RTCPeerConnection' <<<"$device_symbols"
+grep -q '_OBJC_CLASS_\$_RTCDataChannel' <<<"$device_symbols"
+if grep -q '_OBJC_CLASS_\$_LKRTC' <<<"$device_symbols"; then
     echo "Unexpected LiveKit-prefixed symbols found" >&2
     exit 1
 fi
+for removed_class in RTCAudioSource RTCVideoSource RTCCameraPreviewView RTCMediaStream; do
+    if grep -q "_OBJC_CLASS_\\\$_$removed_class" <<<"$device_symbols"; then
+        echo "Unexpected media class found: $removed_class" >&2
+        exit 1
+    fi
+done
+
+device_size="$(stat -f '%z' "$device_binary")"
+[[ "$device_size" -le 3000000 ]] || {
+    echo "Device WebRTC binary exceeds 3,000,000-byte budget: $device_size" >&2
+    exit 1
+}
 
 license_count="$(find "$XCFRAMEWORK_PATH" -iname '*license*' -type f | wc -l | tr -d ' ')"
 [[ "$license_count" -gt 0 ]] || {
@@ -36,5 +49,4 @@ license_count="$(find "$XCFRAMEWORK_PATH" -iname '*license*' -type f | wc -l | t
     exit 1
 }
 
-echo "Verified device and simulator slices, RTC symbols, and licenses"
-
+echo "Verified slices, data-channel-only symbols, size budget, and licenses"

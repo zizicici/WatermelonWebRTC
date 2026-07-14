@@ -23,6 +23,10 @@ if [[ ! -d "$WEBRTC_SRC_DIR/.git" ]]; then
     )
 fi
 
+current_commit="$(git -C "$WEBRTC_SRC_DIR" rev-parse HEAD)"
+if [[ "$current_commit" == "$WEBRTC_COMMIT" ]]; then
+    "$ROOT_DIR/scripts/patches.sh" --reverse
+fi
 git -C "$WEBRTC_SRC_DIR" fetch origin "$WEBRTC_REF"
 git -C "$WEBRTC_SRC_DIR" checkout --detach "$WEBRTC_COMMIT"
 (
@@ -36,5 +40,6 @@ actual_commit="$(git -C "$WEBRTC_SRC_DIR" rev-parse HEAD)"
     exit 1
 }
 
-echo "Synced Google WebRTC $WEBRTC_COMMIT"
+"$ROOT_DIR/scripts/patches.sh" --apply
 
+echo "Synced Google WebRTC $WEBRTC_COMMIT"
