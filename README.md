@@ -6,6 +6,32 @@ This repository pins an exact commit from `webrtc.googlesource.com`, applies a r
 
 The build keeps peer connections, SDP, ICE, DTLS, SCTP, and data channels. GN options and the patches in `patches/` remove Objective-C media implementations, audio/video factories, capture/rendering helpers, broad Objective-C archive loading, Opus, AV1, audio processing, protobuf event logging, PSNR helpers, and internal metrics. The remaining Objective-C media headers are not a supported API surface for this package.
 
+This is a Watermelon-maintained custom binary, not an official Google release. The source code and the upstream build entry point come from Google WebRTC; the reduced build profile, patches, packaging, and release version belong to this repository.
+
+## Where this build comes from
+
+Release `144.7559.2-watermelon.1` has the following lineage:
+
+1. Check out Google's WebRTC milestone 144 branch head `refs/branch-heads/7559` at commit `2e1433bcaaa9582126e2af48a3c5d712331931c4`.
+2. Check out Chromium `depot_tools` at commit `953e42245133578f3af7abebe9f929f2cfc549cf` and use it to synchronize Google's pinned dependency graph.
+3. Apply `patches/webrtc-data-channel-only.patch` to the WebRTC checkout and `patches/chromium-ios-minsize.patch` to its Chromium build checkout.
+4. Invoke Google's `tools_webrtc/ios/build_ios_libs.py` for iOS device arm64 and simulator arm64/x86_64, with the Watermelon data-channel-only and minimum-size GN arguments from `scripts/build.sh`.
+5. Verify the architectures, required peer-connection and data-channel symbols, absence of selected media classes, generated licenses, and the device-binary size limit.
+6. Remove dSYMs from the runtime archive, create a deterministic zip, compute its SwiftPM checksum, and publish it as an immutable GitHub release asset.
+
+The earlier `144.7559.1` release in this repository was a full WebRTC build from the same pinned Google commit. `144.7559.2-watermelon.1` is produced by rebuilding that source with the first Watermelon data-channel-only profile; it is not a newer upstream WebRTC revision and is not derived from another vendor's XCFramework.
+
+The custom version is intentionally distinct from upstream numbering:
+
+| Component | Meaning |
+| --- | --- |
+| `144` | Google WebRTC milestone |
+| `7559` | Google WebRTC branch head |
+| `2` | Binary package revision in this repository |
+| `watermelon.1` | Watermelon custom build-profile revision |
+
+The authoritative pins and current package version live in `VERSION.env`. Each release also includes `provenance.json`, which records the exact source commit, tool commit, patch-set hash, build profile, deployment target, archive name, and SwiftPM checksum.
+
 ## Trust model
 
 - Source: `https://webrtc.googlesource.com/src`
@@ -43,8 +69,6 @@ The build produces:
 - a generated `Package.swift` containing the release URL and checksum
 
 The local XCFramework retains dSYMs. The SwiftPM runtime archive excludes them to keep dependency downloads small. Verification also rejects media-class regressions and a device WebRTC executable larger than 3,000,000 bytes.
-
-Custom releases use `<milestone>.<branch>.<package-revision>-watermelon.<profile-revision>` so they cannot be mistaken for an upstream version.
 
 ## Updating
 
